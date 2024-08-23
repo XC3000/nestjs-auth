@@ -3,7 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
 import { CreateUserRequest } from './dto/create-user.request';
-import argon2 from 'argon2';
+
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class UsersService {
@@ -13,9 +14,7 @@ export class UsersService {
   async create(data: CreateUserRequest) {
     await new this.userModel({
       ...data,
-      password: await argon2.hash(data.password, {
-        salt: 10,
-      }),
+      password: await argon2.hash(data.password),
     }).save();
   }
 }
